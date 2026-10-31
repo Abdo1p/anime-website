@@ -3,8 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AnimeVerse - منصة الأنمي</title>
-    <link rel="stylesheet" href="style.css">
+    <title>AnimeVerse - منصة الأنمي الاحترافية</title>
+    <style>
+        :root {
+            --bg-main: #0f1015;
+            --bg-card: #181a20;
+            --accent: #7928ca;
+            --text-main: #ffffff;
+            --text-muted: #8c92a4;
+            --border-color: #272a35;
+        }
+        body.light-mode {
+            --bg-main: #f8f9fa;
+            --bg-card: #ffffff;
+            --accent: #7928ca;
+            --text-main: #1a1d24;
+            --text-muted: #686d7e;
+            --border-color: #e2e5eb;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; }
+        header { background-color: var(--bg-card); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
+        .logo { font-size: 22px; font-weight: 900; color: var(--text-main); cursor: pointer; }
+        .logo span { color: var(--accent); }
+        .theme-toggle-btn { background: var(--bg-main); border: 1px solid var(--border-color); color: var(--text-main); padding: 6px 12px; border-radius: 8px; cursor: pointer; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
+        .section-title { font-size: 18px; margin-bottom: 15px; font-weight: bold; border-right: 4px solid var(--accent); padding-right: 8px; }
+        .anime-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        @media (min-width: 600px) { .anime-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; } }
+        .anime-card { background: var(--bg-card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); transition: transform 0.2s; }
+        .anime-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+        .anime-poster-wrapper { position: relative; height: 220px; }
+        .anime-poster-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+        .anime-badge { position: absolute; top: 8px; left: 8px; background: rgba(15, 16, 21, 0.85); padding: 3px 8px; border-radius: 6px; font-size: 11px; color: #fff; border: 1px solid var(--border-color); font-weight: bold; }
+        .anime-details { padding: 12px; }
+        .anime-name { font-size: 14px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
+        .anime-genres { font-size: 11px; color: var(--text-muted); }
+    </style>
 </head>
 <body>
 
@@ -17,36 +52,36 @@
 
     <div class="container">
         <h2 class="section-title">أشهر أنميات العالم</h2>
-        <div class="anime-grid" id="animeGrid">
-            <div style="grid-column: span 2; text-align: center; color: #fff; padding: 40px;">جاري تحميل الأنميات... ⏳</div>
-        </div>
+        <div class="anime-grid" id="animeGrid"></div>
     </div>
 
     <script>
-        async function fetchAnime() {
-            try {
-                const response = await fetch('https://api.jikan.moe/v4/top/anime');
-                const data = await response.json();
-                const grid = document.getElementById('animeGrid');
-                grid.innerHTML = '';
-                
-                data.data.forEach(anime => {
-                    grid.innerHTML += `
-                        <div class="anime-card">
-                            <div class="anime-poster-wrapper">
-                                <span class="anime-badge">⭐ ${anime.score || 'N/A'}</span>
-                                <img src="${anime.images.jpg.image_url}" alt="${anime.title}">
-                            </div>
-                            <div class="anime-details">
-                                <div class="anime-name">${anime.title}</div>
-                                <div class="anime-genres">${anime.type || 'TV'} (${anime.year || 'مستمر'})</div>
-                            </div>
+        const localAnimeData = [
+            { title: "Solo Leveling", genres: "أكشن، خيال، مغامرات", image: "https://images.unsplash.com/photo-1563089145-599997674d42?w=500", badge: "⭐ 9.1", type: "موسم جديد" },
+            { title: "Demon Slayer", genres: "شونين، خارق للطبيعة", image: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500", badge: "⭐ 8.9", type: "مكتمل" },
+            { title: "Jujutsu Kaisen", genres: "أكشن، خيال مظلم", image: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500", badge: "⭐ 8.8", type: "مستمر" },
+            { title: "Attack on Titan", genres: "أكشن، دراما، خيال", image: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=500", badge: "⭐ 9.5", type: "أسطوري" },
+            { title: "One Piece", genres: "شونين، مغامرات، كوميديا", image: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=500", badge: "⭐ 9.0", type: "أسطوري" },
+            { title: "Naruto Shippuden", genres: "أكشن، شونين", image: "https://images.unsplash.com/photo-1563089145-599997674d42?w=500", badge: "⭐ 8.7", type: "مكتمل" }
+        ];
+
+        function renderAnime() {
+            const grid = document.getElementById('animeGrid');
+            grid.innerHTML = '';
+            localAnimeData.forEach(anime => {
+                grid.innerHTML += `
+                    <div class="anime-card">
+                        <div class="anime-poster-wrapper">
+                            <span class="anime-badge">${anime.badge}</span>
+                            <img src="${anime.image}" alt="${anime.title}">
                         </div>
-                    `;
-                });
-            } catch (error) {
-                document.getElementById('animeGrid').innerHTML = '<p style="color:red; text-align:center; grid-column:span 2;">فشل في تحميل البيانات، تأكد من اتصال الإنترنت.</p>';
-            }
+                        <div class="anime-details">
+                            <div class="anime-name">${anime.title}</div>
+                            <div class="anime-genres">${anime.genres} (${anime.type})</div>
+                        </div>
+                    </div>
+                `;
+            });
         }
 
         function toggleTheme() {
@@ -55,7 +90,7 @@
             btn.innerHTML = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
         }
 
-        window.addEventListener('DOMContentLoaded', fetchAnime);
+        window.addEventListener('DOMContentLoaded', renderAnime);
     </script>
 </body>
 </html>
