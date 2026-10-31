@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Animerco - Anime Streaming & Discovery</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="dark-mode">
+
+  <!-- Header / Navigation Bar -->
+  <header class="header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-badge">▶</div>
+        <span class="brand-text">ANIMER<span class="brand-accent">CO</span></span>
+      </div>
+
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search anime or genres..." />
+      </div>
+
+      <div class="header-actions">
+        <button id="themeToggle" class="btn-icon" title="Toggle Theme">🌓</button>
+        <button id="favoritesBtn" class="btn-accent">
+          <span>Watchlist</span>
+          <span id="favCount" class="badge">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Video Player Wrapper Section (Active Episode) -->
+  <section id="playerSection" class="player-section hidden">
+    <div class="player-container">
+      <div class="player-header">
+        <button id="backBtn" class="btn-back">← Back to Grid</button>
+        <h2 id="nowPlayingTitle" class="now-playing-title">Anime Title - Episode 1</h2>
+      </div>
+
+      <div class="video-wrapper">
+        <iframe id="videoIframe" src="" allowfullscreen></iframe>
+      </div>
+
+      <div class="player-controls">
+        <div class="server-list" id="serverList">
+          <!-- Populated dynamically via JS -->
+        </div>
+        <div class="episode-nav">
+          <button id="prevEpBtn" class="btn-secondary">Prev</button>
+          <span id="currentEpLabel">Ep 1</span>
+          <button id="nextEpBtn" class="btn-accent">Next</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Layout -->
+  <main class="main-container">
+    <!-- Category & Genre Filter Tabs -->
+    <div class="category-strip" id="categoryStrip">
+      <button class="cat-btn active" data-genre="All">All</button>
+      <button class="cat-btn" data-genre="Action">Action</button>
+      <button class="cat-btn" data-genre="Fantasy">Fantasy</button>
+      <button class="cat-btn" data-genre="Shonen">Shonen</button>
+      <button class="cat-btn" data-genre="Supernatural">Supernatural</button>
+      <button class="cat-btn" data-genre="Adventure">Adventure</button>
+      <button class="cat-btn" data-genre="Mystery">Mystery</button>
+    </div>
+
+    <!-- Anime Cards Grid -->
+    <div class="anime-grid" id="animeGrid">
+      <!-- Populated dynamically from data.js & Jikan API -->
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="data.js"></script>
+  <script>
+    // Pure Vanilla JS Interactive Controller
+    let currentAnimeList = [...ANIME_DATABASE];
+    let favorites = JSON.parse(localStorage.getItem('animerco_favs') || '[]');
+
+    function updateFavCount() {
+      document.getElementById('favCount').textContent = favorites.length;
+    }
+
+    function renderGrid(list) {
+      const grid = document.getElementById('animeGrid');
+      grid.innerHTML = '';
+      if (!list.length) {
+        grid.innerHTML = '<p class="empty-state">No anime found matching your filter.</p>';
+        return;
+      }
+      list.forEach(anime => {
+        const card = document.createElement('div');
+        card.className = 'anime-card';
+        const isFav = favorites.includes(anime.id);
+        card.innerHTML = `
+          <div class="card-poster">
+            <img src="${anime.poster}" alt="${anime.title}" loading="lazy" />
+            <div class="card-rating">★ ${anime.score}</div>
+            <button class="card-fav-btn ${isFav ? 'active' : ''}">♥</button>
+          </div>
+          <div class="card-info">
+            <h3 class="card-title">${anime.title}</h3>
+            <p class="card-meta">${anime.genres.slice(0, 2).join(' · ')} · ${anime.episodesCount} Ep</p>
+          </div>
+        `;
+        card.addEventListener('click', (e) => {
+          if (e.target.classList.contains('card-fav-btn')) {
+            e.stopPropagation();
+            toggleFav(anime.id);
+            renderGrid(list);
+            return;
+          }
+          openPlayer(anime);
+        });
+        grid.appendChild(card);
+      });
+      updateFavCount();
+    }
+
+    function toggleFav(id) {
+      if (favorites.includes(id)) {
+        favorites = favorites.filter(fav => fav !== id);
+      } else {
+        favorites.push(id);
+      }
+      localStorage.setItem('animerco_favs', JSON.stringify(favorites));
+    }
+
+    function openPlayer(anime) {
+      const ep = anime.episodes && anime.episodes[0] ? anime.episodes[0] : null;
+      if (!ep) return;
+      document.getElementById('nowPlayingTitle').textContent = `${anime.title} - Episode ${ep.number}`;
+      const iframe = document.getElementById('videoIframe');
+      iframe.src = ep.servers[0]?.embedUrl || `https://www.youtube-nocookie.com/embed/${anime.trailerYoutubeId}?autoplay=1`;
+      document.getElementById('playerSection').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    document.getElementById('backBtn').addEventListener('click', () => {
+      document.getElementById('playerSection').classList.add('hidden');
+      document.getElementById('videoIframe').src = '';
+    });
+
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const term = e.target.value.toLowerCase();
+      const filtered = ANIME_DATABASE.filter(a => 
+        a.title.toLowerCase().includes(term) || 
+        a.genres.some(g => g.toLowerCase().includes(term))
+      );
+      renderGrid(filtered);
+    });
+
+    // Initial render
+    renderGrid(currentAnimeList);
+
+    // Fetch dynamic live Jikan API
+    fetch('https://api.jikan.moe/v4/top/anime?limit=12')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.data) {
+          const liveAnime = data.data.map(item => ({
+            id: 'mal-' + item.mal_id,
+            title: item.title,
+            poster: item.images?.webp?.large_image_url || item.images?.jpg?.large_image_url,
+            score: item.score || 8.0,
+            episodesCount: item.episodes || 12,
+            genres: item.genres?.map(g => g.name) || ['Action'],
+            trailerYoutubeId: item.trailer?.youtube_id || 'dQw4w9WgXcQ',
+            episodes: [{ number: 1, title: 'Episode 1', servers: [{ name: 'Alpha HD', embedUrl: item.trailer?.embed_url || 'https://www.youtube-nocookie.com/embed/' + (item.trailer?.youtube_id || 'dQw4w9WgXcQ') + '?autoplay=1' }] }]
+          }));
+          currentAnimeList = [...ANIME_DATABASE, ...liveAnime];
+          renderGrid(currentAnimeList);
+        }
+      })
+      .catch(err => console.log('Jikan API fallback to local DB'));
+  </script>
+</body>
+</html>
