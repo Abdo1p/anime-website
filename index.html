@@ -3,60 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AnimeVerse - منصة الأنمي الاحترافية</title>
+    <title>AnimeVerse - منصة الأنمي</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- شريط التنقل العلوي -->
     <header>
         <div class="logo" onclick="location.reload()">ANIME<span>VERSE</span></div>
         <div class="header-controls">
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="ابحث عن أنمي..." onkeypress="handleSearch(event)">
-                <span>🔍</span>
-            </div>
             <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">🌙</button>
         </div>
     </header>
 
     <div class="container">
-        
-        <!-- قسم المشاهدة -->
-        <div class="watch-container">
-            <div class="player-card">
-                <div class="video-wrapper">
-                    <!-- عرض مقطع دعائي أو مشغل للفيديو -->
-                    <iframe id="mainPlayer" src="" allowfullscreen></iframe>
-                </div>
-                <div class="anime-meta">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                        <h1 id="activeTitle" style="font-size: 18px; margin: 0;">اختر أنمي للمشاهدة</h1>
-                        <button class="fav-btn" id="favBtn" onclick="toggleFavorite()">❤️ المفضلة</button>
-                    </div>
-                    <p id="activeDescription" style="font-size: 13px; color: var(--text-muted);">اختر أحد الأنميات من القائمة بالأسفل لعرض التفاصيل.</p>
-                </div>
-            </div>
-
-            <!-- معلومات إضافية أو الحلقات -->
-            <div class="episodes-sidebar">
-                <div class="sidebar-header">
-                    <span id="sidebarAnimeName">معلومات الأنمي</span>
-                </div>
-                <div class="episodes-list" id="episodesListContainer" style="padding: 15px; font-size: 14px; color: var(--text-muted);">
-                    اختر أنمي من القائمة لعرض قصته والتقييم وتفاصيل الحلقات 🎬
-                </div>
-            </div>
-        </div>
-
-        <!-- قائمة الأنميات -->
-        <h2 class="section-title">أشهر أنميات العالم (Jikan API)</h2>
+        <h2 class="section-title">أشهر أنميات العالم</h2>
         <div class="anime-grid" id="animeGrid">
-            <div style="grid-column: span 2; text-align: center; color: var(--text-muted); padding: 40px;">جاري تحميل الأنميات من السيرفر... ⏳</div>
+            <div style="grid-column: span 2; text-align: center; color: #fff; padding: 40px;">جاري تحميل الأنميات... ⏳</div>
         </div>
-
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        async function fetchAnime() {
+            try {
+                const response = await fetch('https://api.jikan.moe/v4/top/anime');
+                const data = await response.json();
+                const grid = document.getElementById('animeGrid');
+                grid.innerHTML = '';
+                
+                data.data.forEach(anime => {
+                    grid.innerHTML += `
+                        <div class="anime-card">
+                            <div class="anime-poster-wrapper">
+                                <span class="anime-badge">⭐ ${anime.score || 'N/A'}</span>
+                                <img src="${anime.images.jpg.image_url}" alt="${anime.title}">
+                            </div>
+                            <div class="anime-details">
+                                <div class="anime-name">${anime.title}</div>
+                                <div class="anime-genres">${anime.type || 'TV'} (${anime.year || 'مستمر'})</div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                document.getElementById('animeGrid').innerHTML = '<p style="color:red; text-align:center; grid-column:span 2;">فشل في تحميل البيانات، تأكد من اتصال الإنترنت.</p>';
+            }
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const btn = document.getElementById('themeToggleBtn');
+            btn.innerHTML = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
+        }
+
+        window.addEventListener('DOMContentLoaded', fetchAnime);
+    </script>
 </body>
 </html>
