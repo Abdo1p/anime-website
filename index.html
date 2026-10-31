@@ -11,18 +11,12 @@
     <!-- شريط التنقل العلوي -->
     <header>
         <div class="logo" onclick="location.reload()">ANIME<span>VERSE</span></div>
-        
         <div class="header-controls">
-            <!-- خانة البحث -->
             <div class="search-box">
                 <input type="text" id="searchInput" placeholder="ابحث عن أنمي..." onkeyup="filterAnime()">
                 <span>🔍</span>
             </div>
-            
-            <!-- زر تبديل الثيم -->
-            <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">
-                🌙 الوضع الليلي
-            </button>
+            <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">🌙</button>
         </div>
     </header>
 
@@ -45,27 +39,27 @@
                 </div>
                 <div class="anime-meta">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                        <h1 id="activeTitle" style="margin: 0;">اختر حلقة للمشاهدة</h1>
-                        <button class="fav-btn" id="favBtn" onclick="toggleFavorite()">❤️ أضف للمفضلة</button>
+                        <h1 id="activeTitle" style="font-size: 18px; margin: 0;">اختر حلقة للمشاهدة</h1>
+                        <button class="fav-btn" id="favBtn" onclick="toggleFavorite()">❤️ المفضلة</button>
                     </div>
-                    <p id="activeDescription">مرحباً بك في منصتك الخاصة. اختر أحد الأنميات وابدأ بالمشاهدة.</p>
+                    <p id="activeDescription" style="font-size: 13px;">اختر أحد الأنميات وابدأ بالمشاهدة.</p>
                     
                     <div class="servers-section">
-                        <span>سيرفرات المشاهدة:</span>
+                        <span>السيرفرات:</span>
                         <div id="serversListContainer" style="display: flex; gap: 8px; flex-wrap: wrap;"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- قائمة الحلقات -->
+            <!-- قائمة الحلقات (متوافقة مع الهاتف) -->
             <div class="episodes-sidebar">
                 <div class="sidebar-header">
                     <span id="sidebarAnimeName">قائمة الحلقات</span>
                     <span style="font-size: 12px; color: var(--text-muted);" id="episodesCount">0 حلقة</span>
                 </div>
                 <div class="episodes-list" id="episodesListContainer">
-                    <div style="text-align: center; color: var(--text-muted); margin-top: 60px;">
-                        الرجاء اختيار أنمي من القائمة بالأسفل 🎬
+                    <div style="text-align: center; color: var(--text-muted); margin-top: 40px; font-size: 13px;">
+                        اختر أنمي من القائمة بالأسفل 🎬
                     </div>
                 </div>
             </div>
@@ -78,7 +72,6 @@
     </div>
 
     <script src="data.js"></script>
-    <script src="style.js" defer></script>
     <script>
         let currentAnimeId = null;
         let currentActiveEpisode = null;
@@ -88,10 +81,10 @@
             document.body.classList.toggle('light-mode');
             const btn = document.getElementById('themeToggleBtn');
             if (document.body.classList.contains('light-mode')) {
-                btn.innerHTML = '☀️ الوضع الفاتح';
+                btn.innerHTML = '☀️';
                 localStorage.setItem('theme', 'light');
             } else {
-                btn.innerHTML = '🌙 الوضع الليلي';
+                btn.innerHTML = '🌙';
                 localStorage.setItem('theme', 'dark');
             }
         }
@@ -99,7 +92,7 @@
         window.addEventListener('DOMContentLoaded', () => {
             if (localStorage.getItem('theme') === 'light') {
                 document.body.classList.add('light-mode');
-                document.getElementById('themeToggleBtn').innerHTML = '☀️ الوضع الفاتح';
+                document.getElementById('themeToggleBtn').innerHTML = '☀️';
             }
             renderAnimeGrid(animeDatabase);
             if(animeDatabase.length > 0) loadAnime(animeDatabase[0].id);
@@ -151,7 +144,6 @@
             if (anime.episodes.length > 0) {
                 selectEpisode(anime.episodes[0], anime.title, 0, epContainer.children[0]);
             }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function selectEpisode(epData, animeName, index, element) {
@@ -200,11 +192,11 @@
         function updateFavButtonState() {
             const btn = document.getElementById('favBtn');
             if (favorites.includes(currentAnimeId)) {
-                btn.innerHTML = '❤️ في المفضلة';
+                btn.innerHTML = '❤️ بالمفضلة';
                 btn.style.background = 'var(--accent)';
                 btn.style.color = '#fff';
             } else {
-                btn.innerHTML = '🤍 أضف للمفضلة';
+                btn.innerHTML = '🤍 المفضلة';
                 btn.style.background = 'var(--bg-card-hover)';
                 btn.style.color = 'var(--text-main)';
             }
