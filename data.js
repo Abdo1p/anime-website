@@ -42,5 +42,23 @@ const animeDatabase = [
                 ]
             }
         ]
+    },
+    {
+        id: 3,
+        title: "Jujutsu Kaisen",
+        genres: "أكشن، خيال مظلم، شونين",
+        image: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500",
+        badge: "مستمر",
+        description: "يوجي إيتادوري يبتلع اصبعاً ملعوناً خطيراً ليجد نفسه وسط عالم صاخب من السحرة واللعنات.",
+        episodes: [
+            {
+                title: "الحلقة 1: ذكريات اللعنة",
+                duration: "24 دقيقة",
+                servers: [
+                    { name: "سيرفر رئيسي (HD)", url: "https://www.youtube.com/embed/40u2IQpICsw" },
+                    { name: "سيرفر احتياطي", url: "https://www.youtube.com/embed/dQw4w9WgXcQ" }
+                ]
+            }
+        ]
     }
 ];

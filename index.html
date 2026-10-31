@@ -19,7 +19,7 @@
                 <span>🔍</span>
             </div>
             
-            <!-- زر تبديل الوضع الليلي / الفاتح -->
+            <!-- زر تبديل الثيم -->
             <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">
                 🌙 الوضع الليلي
             </button>
@@ -28,17 +28,28 @@
 
     <div class="container">
         
-        <!-- قسم المشاهدة والسيرفرات -->
+        <!-- تصنيفات سريعة -->
+        <div class="categories-bar">
+            <button class="cat-btn active" onclick="filterByCategory('الكل')">الكل</button>
+            <button class="cat-btn" onclick="filterByCategory('أكشن')">أكشن</button>
+            <button class="cat-btn" onclick="filterByCategory('خيال')">خيال</button>
+            <button class="cat-btn" onclick="filterByCategory('شونين')">شونين</button>
+            <button class="cat-btn" onclick="filterByCategory('مكتمل')">مكتمل</button>
+        </div>
+
+        <!-- قسم المشاهدة -->
         <div class="watch-container">
             <div class="player-card">
                 <div class="video-wrapper">
                     <iframe id="mainPlayer" src="" allowfullscreen></iframe>
                 </div>
                 <div class="anime-meta">
-                    <h1 id="activeTitle">اختر حلقة للمشاهدة</h1>
-                    <p id="activeDescription">مرحباً بك في منصتك الخاصة. اختر أحد الأنميات أدناه وابدأ بالمشاهدة مع إمكانية التبديل بين سيرفرات العرض المختلفة.</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <h1 id="activeTitle" style="margin: 0;">اختر حلقة للمشاهدة</h1>
+                        <button class="fav-btn" id="favBtn" onclick="toggleFavorite()">❤️ أضف للمفضلة</button>
+                    </div>
+                    <p id="activeDescription">مرحباً بك في منصتك الخاصة. اختر أحد الأنميات وابدأ بالمشاهدة.</p>
                     
-                    <!-- أزرار اختيار السيرفرات -->
                     <div class="servers-section">
                         <span>سيرفرات المشاهدة:</span>
                         <div id="serversListContainer" style="display: flex; gap: 8px; flex-wrap: wrap;"></div>
@@ -66,17 +77,16 @@
 
     </div>
 
-    <!-- ربط ملف البيانات -->
     <script src="data.js"></script>
-
+    <script src="style.js" defer></script>
     <script>
+        let currentAnimeId = null;
         let currentActiveEpisode = null;
+        let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
 
-        // وظيفة تبديل الوضع (Light / Dark Mode)
         function toggleTheme() {
             document.body.classList.toggle('light-mode');
             const btn = document.getElementById('themeToggleBtn');
-            
             if (document.body.classList.contains('light-mode')) {
                 btn.innerHTML = '☀️ الوضع الفاتح';
                 localStorage.setItem('theme', 'light');
@@ -86,20 +96,18 @@
             }
         }
 
-        // التحقق من خيار المستخدم المحفوظ مسبقاً عند فتح الصفحة
         window.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'light') {
+            if (localStorage.getItem('theme') === 'light') {
                 document.body.classList.add('light-mode');
                 document.getElementById('themeToggleBtn').innerHTML = '☀️ الوضع الفاتح';
             }
+            renderAnimeGrid(animeDatabase);
+            if(animeDatabase.length > 0) loadAnime(animeDatabase[0].id);
         });
 
-        // عرض الأنميات في الشبكة
         function renderAnimeGrid(data) {
             const grid = document.getElementById('animeGrid');
             grid.innerHTML = '';
-            
             data.forEach(anime => {
                 grid.innerHTML += `
                     <div class="anime-card" onclick="loadAnime(${anime.id})">
@@ -116,8 +124,8 @@
             });
         }
 
-        // تحميل الأنمي وعرض حلقاته
         function loadAnime(animeId) {
+            currentAnimeId = animeId;
             const anime = animeDatabase.find(a => a.id === animeId);
             if (!anime) return;
 
@@ -125,6 +133,8 @@
             document.getElementById('episodesCount').innerText = `${anime.episodes.length} حلقة`;
             document.getElementById('activeDescription').innerText = anime.description;
             
+            updateFavButtonState();
+
             const epContainer = document.getElementById('episodesListContainer');
             epContainer.innerHTML = '';
 
@@ -132,9 +142,7 @@
                 const isActive = index === 0 ? 'active' : '';
                 epContainer.innerHTML += `
                     <div class="episode-item ${isActive}" id="ep-${index}" onclick='selectEpisode(${JSON.stringify(ep)}, "${anime.title}", ${index}, this)'>
-                        <div>
-                            <div class="ep-num">${ep.title}</div>
-                        </div>
+                        <div><div class="ep-num">${ep.title}</div></div>
                         <span class="ep-dur">${ep.duration}</span>
                     </div>
                 `;
@@ -143,11 +151,9 @@
             if (anime.episodes.length > 0) {
                 selectEpisode(anime.episodes[0], anime.title, 0, epContainer.children[0]);
             }
-
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // اختيار الحلقة وتوليد السيرفرات
         function selectEpisode(epData, animeName, index, element) {
             currentActiveEpisode = epData;
             document.getElementById('activeTitle').innerText = `${animeName} - ${epData.title}`;
@@ -173,7 +179,6 @@
             }
         }
 
-        // تبديل السيرفر
         function changeServer(videoUrl, btnElement) {
             document.getElementById('mainPlayer').src = videoUrl;
             let sButtons = document.querySelectorAll('.server-btn');
@@ -181,7 +186,30 @@
             btnElement.classList.add('active');
         }
 
-        // نظام البحث الفوري
+        function toggleFavorite() {
+            const index = favorites.indexOf(currentAnimeId);
+            if (index > -1) {
+                favorites.splice(index, 1);
+            } else {
+                favorites.push(currentAnimeId);
+            }
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            updateFavButtonState();
+        }
+
+        function updateFavButtonState() {
+            const btn = document.getElementById('favBtn');
+            if (favorites.includes(currentAnimeId)) {
+                btn.innerHTML = '❤️ في المفضلة';
+                btn.style.background = 'var(--accent)';
+                btn.style.color = '#fff';
+            } else {
+                btn.innerHTML = '🤍 أضف للمفضلة';
+                btn.style.background = 'var(--bg-card-hover)';
+                btn.style.color = 'var(--text-main)';
+            }
+        }
+
         function filterAnime() {
             let query = document.getElementById('searchInput').value.toLowerCase();
             let filtered = animeDatabase.filter(anime => 
@@ -190,10 +218,17 @@
             renderAnimeGrid(filtered);
         }
 
-        window.onload = function() {
-            renderAnimeGrid(animeDatabase);
-            loadAnime(animeDatabase[0].id);
-        };
+        function filterByCategory(category) {
+            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (category === 'الكل') {
+                renderAnimeGrid(animeDatabase);
+            } else {
+                let filtered = animeDatabase.filter(anime => anime.genres.includes(category) || anime.badge.includes(category));
+                renderAnimeGrid(filtered);
+            }
+        }
     </script>
 </body>
 </html>
