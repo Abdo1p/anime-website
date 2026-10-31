@@ -287,7 +287,7 @@ const FALLBACK_ANIMES = [
     },
     genres: [{ name: "Action" }, { name: "Comedy" }],
     studios: [{ name: "Wit Studio" }, { name: "CloverWorks" }],
-    synopsis: "Corrupt politicians, fractious nationalists, and other warmongering forces constantly jeopardize the thin veneer of peace between neighboring countries Ostania and Westalis. Master spy 'Twilight' is tasked with an impossible mission: get married and have a child."
+    synopsis: "Corrupt politicians, frenzied nationalists, and other warmongering forces constantly jeopardize the thin veneer of peace between neighboring countries Ostania and Westalis. Master spy 'Twilight' is tasked with an impossible mission: get married and have a child."
   },
   {
     mal_id: 37521,
@@ -1215,6 +1215,7 @@ function renderAnimeGrid(items) {
 
     // Card click opens player
     card.addEventListener("click", (e) => {
+      // Don't trigger if clicked bookmark button directly
       if (e.target.closest(".card-action-bookmark")) return;
       if (anime) {
         openVideoPlayer(anime);
@@ -1382,7 +1383,7 @@ function renderPlayerEpisodes(totalEpisodes) {
   const label = document.getElementById("episodes-count-label");
   if (!container) return;
 
-  const count = Math.min(Math.max(totalEpisodes || 12, 1), 60);
+  const count = Math.min(Math.max(totalEpisodes || 12, 1), 60); // Show max 60 quick buttons
   if (label) label.textContent = `${count} Episodes Available`;
 
   container.innerHTML = Array.from({ length: count }, (_, i) => i + 1).map(ep => `
@@ -1448,6 +1449,7 @@ function toggleWatchlist(anime) {
     updateHeroWatchlistState(anime);
   }
 
+  // If currently in Watchlist view, re-render
   if (AppState.currentCategory === "watchlist") {
     renderAnimeGrid(AppState.watchlist);
   }
@@ -1540,6 +1542,7 @@ function renderWatchlistDrawer() {
     `;
   }).join("");
 
+  // Attach click listener to watch anime from drawer
   const items = body.querySelectorAll(".watchlist-item");
   items.forEach(item => {
     const id = parseInt(item.getAttribute("data-id"), 10);

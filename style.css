@@ -422,6 +422,20 @@ body {
   border-color: var(--border-light);
 }
 
+.download-btn {
+  background: linear-gradient(135deg, rgba(121, 40, 202, 0.25), rgba(147, 51, 234, 0.15));
+  border-color: var(--accent-purple);
+  color: var(--text-white);
+  text-decoration: none;
+}
+
+.download-btn:hover {
+  background: var(--accent-purple);
+  color: var(--text-white);
+  box-shadow: 0 0 16px var(--accent-purple-glow);
+  transform: translateY(-2px);
+}
+
 .action-svg {
   width: 18px;
   height: 18px;

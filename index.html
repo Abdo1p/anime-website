@@ -77,6 +77,16 @@
           <button type="button" class="nav-link" data-target="movies">Movies</button>
         </nav>
 
+        <!-- Download Project ZIP Button -->
+        <a href="./animelik-project.zip" download="animelik-project.zip" class="action-btn download-btn" id="download-zip-btn" title="تحميل المشروع كاملاً (ZIP)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="action-svg">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span class="action-btn-text">تحميل (ZIP)</span>
+        </a>
+
         <!-- Watchlist / Favorites Counter Button -->
         <button type="button" class="action-btn watchlist-btn" id="watchlist-toggle-btn" aria-label="Open Watchlist">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="action-svg">
@@ -119,6 +129,14 @@
     <!-- Mobile Navigation Drawer -->
     <div class="mobile-nav-drawer hidden" id="mobile-nav-drawer">
       <div class="mobile-nav-links">
+        <a href="./animelik-project.zip" download="animelik-project.zip" class="mobile-nav-link" style="color: var(--accent-violet-light); font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span>تحميل المشروع جاهز (ZIP)</span>
+        </a>
         <button type="button" class="mobile-nav-link active" data-target="home">Home</button>
         <button type="button" class="mobile-nav-link" data-target="airing">Top Airing</button>
         <button type="button" class="mobile-nav-link" data-target="top">Top 100</button>
@@ -192,7 +210,7 @@
     </div>
   </section>
 
-  <!-- RESPONSIVE VIDEO PLAYER SECTION (Revealed when anime is selected) -->
+  <!-- RESPONSIVE VIDEO PLAYER SECTION (Hidden by default, smoothly revealed when anime clicked) -->
   <section class="player-section hidden" id="player-section" aria-label="Anime Video Player">
     <div class="player-container">
       
@@ -255,7 +273,7 @@
         </div>
       </div>
 
-      <!-- Player Anime Meta Details Grid -->
+      <!-- Player Anime Meta & Details Details Grid -->
       <div class="player-details-grid">
         <div class="player-details-left">
           <div class="player-meta-badges" id="player-meta-badges">
@@ -288,14 +306,14 @@
             </a>
           </div>
 
-          <!-- Quick Episodes Grid -->
+          <!-- Quick Episodes Grid Simulation -->
           <div class="episodes-container">
             <div class="episodes-header">
               <span class="episodes-title">Episodes</span>
               <span class="episodes-sub" id="episodes-count-label">Select episode</span>
             </div>
             <div class="episodes-grid" id="episodes-grid">
-              <!-- Dynamically populated episode buttons -->
+              <!-- Dynamically populated episode numbers -->
             </div>
           </div>
         </div>
@@ -326,7 +344,7 @@
       </div>
     </div>
 
-    <!-- Active Search or Filter Notice -->
+    <!-- Active Search or Filter Notice (Hidden unless filtering) -->
     <div class="active-filter-banner hidden" id="active-filter-banner">
       <span id="active-filter-text">Filtering results</span>
       <button type="button" id="reset-filter-btn" class="reset-filter-btn">Reset to Top Anime ✕</button>
