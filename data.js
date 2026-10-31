@@ -11,16 +11,16 @@ const animeDatabase = [
                 title: "الحلقة 1: أنا الصياد الأضعف",
                 duration: "23 دقيقة",
                 servers: [
-                    { name: "رئيسي (HD)", url: "https://www.youtube.com/embed/t1H4hT_8Z1Y" },
-                    { name: "احتياطي", url: "https://www.youtube.com/embed/1U86c4wXgP8" }
+                    { name: "سيرفر رئيسي (HD)", url: "https://www.youtube.com/embed/t1H4hT_8Z1Y" },
+                    { name: "سيرفر احتياطي", url: "https://www.youtube.com/embed/1U86c4wXgP8" }
                 ]
             },
             {
                 title: "الحلقة 2: إذا لم تكن قوياً...",
                 duration: "24 دقيقة",
                 servers: [
-                    { name: "رئيسي (HD)", url: "https://www.youtube.com/embed/1U86c4wXgP8" },
-                    { name: "احتياطي", url: "https://www.youtube.com/embed/t1H4hT_8Z1Y" }
+                    { name: "سيرفر رئيسي (HD)", url: "https://www.youtube.com/embed/1U86c4wXgP8" },
+                    { name: "سيرفر احتياطي", url: "https://www.youtube.com/embed/t1H4hT_8Z1Y" }
                 ]
             }
         ]
@@ -31,14 +31,14 @@ const animeDatabase = [
         genres: "شونين، تاريخي، خارق للطبيعة",
         image: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500",
         badge: "مكتمل",
-        description: "تانجيرو يشرع في رحلة قاسية ومخيفة ليصبح صائد شياطين وينقذ أخته نيزوكو.",
+        description: "تانجيرو يشرع في رحلة قاسية ومخيفة ليصبح صائد شياطين وينقذ أخته نيزوكو التي تحولت لشيطان.",
         episodes: [
             {
                 title: "الحلقة 1: القسوة",
                 duration: "24 دقيقة",
                 servers: [
-                    { name: "رئيسي (HD)", url: "https://www.youtube.com/embed/VQ6Ta6elPHo" },
-                    { name: "احتياطي", url: "https://www.youtube.com/embed/9bZkp7q19f0" }
+                    { name: "سيرفر رئيسي (HD)", url: "https://www.youtube.com/embed/VQ6Ta6elPHo" },
+                    { name: "سيرفر احتياطي", url: "https://www.youtube.com/embed/9bZkp7q19f0" }
                 ]
             }
         ]
@@ -55,8 +55,8 @@ const animeDatabase = [
                 title: "الحلقة 1: ذكريات اللعنة",
                 duration: "24 دقيقة",
                 servers: [
-                    { name: "رئيسي (HD)", url: "https://www.youtube.com/embed/40u2IQpICsw" },
-                    { name: "احتياطي", url: "https://www.youtube.com/embed/dQw4w9WgXcQ" }
+                    { name: "سيرفر رئيسي (HD)", url: "https://www.youtube.com/embed/40u2IQpICsw" },
+                    { name: "سيرفر احتياطي", url: "https://www.youtube.com/embed/dQw4w9WgXcQ" }
                 ]
             }
         ]
@@ -74,7 +74,7 @@ const animeDatabase = [
                 duration: "24 دقيقة",
                 servers: [
                     { name: "رئيسي (HD)", url: "https://www.youtube.com/embed/M_OauHnAFc4" },
-                    { name: "احتياطي", url: "https://www.youtube.com/embed/t1H4hT_8Z1Y" }
+                    { name: "سيرفر احتياطي", url: "https://www.youtube.com/embed/t1H4hT_8Z1Y" }
                 ]
             }
         ]
