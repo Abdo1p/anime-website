@@ -97,35 +97,6 @@ header {
     padding: 0 10px;
 }
 
-.categories-bar {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 15px;
-    overflow-x: auto;
-    padding-bottom: 5px;
-}
-
-.categories-bar::-webkit-scrollbar { display: none; }
-
-.cat-btn {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    color: var(--text-main);
-    padding: 5px 14px;
-    border-radius: 20px;
-    cursor: pointer;
-    white-space: nowrap;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.cat-btn.active, .cat-btn:hover {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
-    box-shadow: 0 0 10px var(--accent-glow);
-}
-
 .watch-container {
     display: grid;
     grid-template-columns: 1fr;
@@ -161,26 +132,6 @@ header {
 }
 
 .anime-meta { padding: 15px; }
-.servers-section { border-top: 1px solid var(--border-color); padding-top: 12px; margin-top: 12px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap;}
-.servers-section span { font-size: 12px; font-weight: bold; color: var(--text-muted); }
-
-.server-btn { 
-    background: var(--bg-main); 
-    border: 1px solid var(--border-color); 
-    color: var(--text-main); 
-    padding: 5px 10px; 
-    border-radius: 6px; 
-    cursor: pointer; 
-    font-size: 12px; 
-    font-weight: 600;
-}
-
-.server-btn:hover, .server-btn.active { 
-    background: var(--accent); 
-    border-color: var(--accent); 
-    color: #fff; 
-    box-shadow: 0 0 8px var(--accent-glow);
-}
 
 .episodes-sidebar { 
     background: var(--bg-card); 
@@ -190,33 +141,14 @@ header {
     flex-direction: column; 
     height: 350px; 
     box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    overflow-y: auto;
 }
 
 @media (min-width: 900px) {
-    .episodes-sidebar { height: 450px; }
+    .episodes-sidebar { height: 435px; }
 }
 
-.sidebar-header { padding: 12px 15px; border-bottom: 1px solid var(--border-color); font-weight: bold; display: flex; justify-content: space-between; font-size: 14px; }
-.episodes-list { padding: 10px; overflow-y: auto; flex-grow: 1; }
-
-.episodes-list::-webkit-scrollbar { width: 4px; }
-.episodes-list::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
-
-.episode-item { 
-    background: var(--bg-main); 
-    padding: 10px; 
-    border-radius: 8px; 
-    margin-bottom: 6px; 
-    cursor: pointer; 
-    display: flex; 
-    justify-content: space-between; 
-    border: 1px solid transparent; 
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.episode-item:hover { background: var(--bg-card-hover); border-color: var(--border-color); }
-.episode-item.active { border-color: var(--accent); background: rgba(121, 40, 202, 0.2); color: var(--accent); }
+.sidebar-header { padding: 12px 15px; border-bottom: 1px solid var(--border-color); font-weight: bold; font-size: 14px; }
 
 .section-title { 
     font-size: 16px; 
